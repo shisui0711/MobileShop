@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/imgHistory"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/history"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <TextView
+        android:id="@+id/txtHistory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Lịch sử tìm kiếm"
+        android:textSize="16sp"
+        android:textColor="@color/primary_500"
+        app:layout_constraintStart_toEndOf="@id/imgHistory"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginHorizontal="12dp"
+        app:layout_constraintEnd_toStartOf="@id/btnRemove"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <TextView
+        android:id="@+id/btnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

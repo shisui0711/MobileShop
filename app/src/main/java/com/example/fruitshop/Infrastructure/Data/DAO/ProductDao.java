@@ -10,6 +10,8 @@ import androidx.room.Update;
 import com.example.fruitshop.Domain.Entities.Product;
 import com.example.fruitshop.Domain.Relations.ProductWithCategory;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Dao
@@ -26,12 +28,13 @@ public interface ProductDao {
     int count();
     @Query("SELECT * FROM products WHERE id = :id")
 
-    Product getById(int id);
+    LiveData<Product> getById(int id);
     @Query("SELECT * FROM products")
     LiveData<List<Product>> getAll();
-    @Query("SELECT * FROM products WHERE name LIKE :name")
+    @Query("SELECT * FROM products WHERE name LIKE '%' || :name || '%'")
     LiveData<List<Product>> getByName(String name);
-
-    @Query("SELECT * FROM products")
-    ProductWithCategory getAllProductWithCategory();
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE productId = :productId AND userId = :userId)")
+    LiveData<Boolean> getFavoriteState(int productId, long userId);
+    @Query("SELECT * FROM products INNER JOIN favorites ON products.id = favorites.productId WHERE favorites.userId = :userId")
+    LiveData<List<Product>> getFavoriteProducts(long userId);
 }

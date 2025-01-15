@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fruitshop.Domain.Entities.Product;
 import com.example.fruitshop.databinding.SearchResultViewholderBinding;
 
@@ -33,11 +34,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public void onBindViewHolder(@NonNull SearchResultAdapter.ViewHolder holder, int position) {
         Product product = products.get(position);
-        binding.txtProductName.setText(product.getName());
-        binding.txtProductPrice.setText(product.getPrice()+"đ");
-        int drawableResource = holder.itemView.getResources().getIdentifier(product.getImageUrl(),
-                "drawable",holder.itemView.getContext().getPackageName());
-        Glide.with(context).load(drawableResource).into(binding.imgProduct);
+        holder.binding.txtProductName.setText(product.getName());
+        holder.binding.txtProductPrice.setText(product.getPrice()+"đ");
+        if(product.getImageUrl().contains("/")){
+            Glide.with(context).load(product.getImageUrl())
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(holder.binding.imgProduct);
+        }else{
+            int drawableResource = holder.itemView.getResources().getIdentifier(product.getImageUrl().trim(),
+                    "drawable",holder.itemView.getContext().getPackageName());
+            Glide.with(context).load(drawableResource)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(holder.binding.imgProduct);
+        }
     }
 
     @Override
@@ -46,8 +57,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        SearchResultViewholderBinding binding;
         public ViewHolder(@NonNull SearchResultViewholderBinding binding) {
             super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

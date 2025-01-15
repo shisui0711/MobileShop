@@ -4,6 +4,7 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity(tableName = "orders",
@@ -13,13 +14,30 @@ foreignKeys = @ForeignKey(
         childColumns = "userId",
         onDelete = ForeignKey.CASCADE
 ))
-public class Order {
+public class Order implements Serializable {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    private int userId;
+    private long id;
+    private long userId;
     private Date orderDate;
     private String status;
     private String paymentMethod;
+    private double totalPrice;
+
+    public Order(long userId, Date orderDate, String status, String paymentMethod,double totalPrice) {
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.totalPrice = totalPrice;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public String getPaymentMethod() {
         return paymentMethod;
@@ -29,19 +47,19 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

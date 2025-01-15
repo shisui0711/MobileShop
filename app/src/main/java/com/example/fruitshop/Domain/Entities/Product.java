@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(
     tableName = "products",
     foreignKeys = @ForeignKey(
@@ -13,22 +15,44 @@ import androidx.room.PrimaryKey;
             onDelete = ForeignKey.CASCADE
     )
 )
-public class Product {
+public class Product implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
     private int categoryId;
     private int price;
-    private int quantity;
     private String imageUrl;
+    private String unit;
+    private String description;
 
-    public Product(int id, String name, int categoryId, int price, int quantity, String imageUrl) {
+
+    public Product() {
+    }
+
+    public Product(int id, String name, int categoryId, int price, String imageUrl, String unit, String description) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;
         this.price = price;
-        this.quantity = quantity;
         this.imageUrl = imageUrl;
+        this.unit = unit;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public int getCategoryId() {
@@ -69,13 +93,5 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }

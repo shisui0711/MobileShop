@@ -20,16 +20,22 @@ foreignKeys = {
         )
 })
 public class DetailOrder {
-    private int orderId;
+    private long orderId;
     private int productId;
     private int quantity;
     private int price;
 
-    public int getOrderId() {
+    public DetailOrder(int productId, int quantity, int price) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 

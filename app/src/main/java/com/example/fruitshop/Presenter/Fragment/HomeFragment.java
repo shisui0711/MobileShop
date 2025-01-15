@@ -20,11 +20,9 @@ import com.example.fruitshop.Domain.Entities.Product;
 import com.example.fruitshop.Domain.Entities.User;
 import com.example.fruitshop.Infrastructure.Data.UserHelper;
 import com.example.fruitshop.Presenter.Activity.CategoryActivity;
-import com.example.fruitshop.Presenter.Activity.MainActivity;
 import com.example.fruitshop.Presenter.Activity.SearchActivity;
 import com.example.fruitshop.Presenter.Adapter.CategoryAdapter;
 import com.example.fruitshop.Presenter.Adapter.ProductAdapter;
-import com.example.fruitshop.R;
 import com.example.fruitshop.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class HomeFragment extends Fragment {
     ProductViewModel productViewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         userHelper = new UserHelper(requireContext());
         binding = FragmentHomeBinding.inflate(inflater);
@@ -52,32 +50,30 @@ public class HomeFragment extends Fragment {
         User user = userHelper.getUserSigned();
         if(user != null)
             binding.userName.setText(userHelper.getUserSigned().getName());
-        binding.btnSeeAllCategory.setOnClickListener(v->{
-            startActivity(new Intent(requireContext(), CategoryActivity.class));
-        });
+        binding.btnSeeAllCategory.setOnClickListener(v-> startActivity(new Intent(requireContext(), CategoryActivity.class)));
         binding.btnSearch.setOnClickListener(v->startActivity(new Intent(requireContext(), SearchActivity.class)));
-        initCategoryRecylerView();
-        initProductRecylerView();
+        initCategoryRecyclerView();
+        initProductRecyclerView();
     }
 
-    private void initProductRecylerView(){
+    private void initProductRecyclerView(){
         ArrayList<Product> products = new ArrayList<>();
-        products.add(new Product(1,"Cam",2,10000,10,"orange"));
-        products.add(new Product(2,"Dứa",2,10000,10,"pineapple"));
-        products.add(new Product(3,"Dưa hấu",2,10000,10,"watermelon"));
-        products.add(new Product(4,"Dâu tây",2,10000,10,"strawberry"));
+        products.add(new Product(1,"Cam",2,10000,"orange","kg", "Cam"));
+        products.add(new Product(2,"Dứa",2,10000,"pineapple","kg", "Dứa"));
+        products.add(new Product(3,"Dưa hấu",2,10000,"watermelon","kg", "Dưa hấu"));
+        products.add(new Product(4,"Dâu tây",2,10000,"strawberry","kg", "Dâu tây"));
 
         productViewModel.getAll().observe(requireActivity(),data ->{
-            if(data.size() > 0){
+            if(!data.isEmpty()){
                 products.clear();
                 products.addAll(data);
             }
         });
         binding.suggestionView.setLayoutManager(new LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false));
-        binding.suggestionView.setAdapter(new ProductAdapter(products));
+        binding.suggestionView.setAdapter(new ProductAdapter(products, productViewModel,this));
     }
 
-    private void initCategoryRecylerView(){
+    private void initCategoryRecyclerView(){
         ArrayList<Category> categories = new ArrayList<>();
         categories.add(new Category(1,"Rau củ","cat1"));
         categories.add(new Category(2,"Hoa quả","cat2"));
@@ -86,7 +82,7 @@ public class HomeFragment extends Fragment {
         categories.add(new Category(5,"Đồ ăn","cat5"));
 
         categoryViewModel.getCategories().observe(requireActivity(),data -> {
-            if(data.size() > 0){
+            if(!data.isEmpty()){
                 categories.clear();
                 categories.addAll(data);
             }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Presenter.Fragment.CategoryManagerFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tất cả danh mục"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/primary_500"
+            android:textSize="26sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_margin="12dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:background="@drawable/edittext_grey_background"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="12dp"
+                android:hint="Tìm kiếm danh mục"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp"
+                android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCreate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                style="@android:style/Widget.Button"
+                android:drawableStart="@drawable/add"
+                android:drawableTint="@color/white"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_primary"
+                android:paddingHorizontal="28dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_marginHorizontal="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</FrameLayout>

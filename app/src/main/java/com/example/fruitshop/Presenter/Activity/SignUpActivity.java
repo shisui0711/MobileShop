@@ -12,8 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fruitshop.Application.ViewModel.UserViewModel;
 import com.example.fruitshop.Domain.Entities.User;
 import com.example.fruitshop.Infrastructure.Data.UserHelper;
+import com.example.fruitshop.Infrastructure.Tool.Converter;
+import com.example.fruitshop.Infrastructure.Tool.Extension;
+import com.example.fruitshop.Infrastructure.Tool.HashUtils;
 import com.example.fruitshop.Presenter.Custom.MyToast;
 import com.example.fruitshop.databinding.ActivitySignUpBinding;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class SignUpActivity extends AppCompatActivity {
     ActivitySignUpBinding binding;
@@ -34,7 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
         binding.btnRegister.setOnClickListener(this::signUp);
     }
 
@@ -42,19 +46,31 @@ public class SignUpActivity extends AppCompatActivity {
         String name = binding.edtFullName.getText().toString();
         String email = binding.edtEmail.getText().toString();
         String password = binding.edtPassword.getText().toString();
-        userViewModel.signUp(name,email,password,this).observe(this, result -> {
-            if(result.isLoading()) return;
-            if(result.getErrors().size() > 0){
-                MyToast.showError(SignUpActivity.this,result.getErrors().iterator().next());
-            }else{
-                userHelper.saveUser(result.getData());
-                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+        Extension.observeOnce(userViewModel.getUserByEmail(email),this,user -> {
+            if (user != null) {
+                MyToast.showError(this, "Email đã tồn tại");
+            } else {
+                // Create new user
+                User newUser = new User();
+                newUser.setName(name);
+                newUser.setEmail(email);
+                newUser.setPasswordHash(HashUtils.sha256(password)); // Ensure secure hashing
+
+                userViewModel.addUser(newUser)
+                        .thenAccept(id -> {
+                            newUser.setId(id);
+                            userHelper.saveUser(newUser);
+                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            startActivity(intent);
+                            finish(); // Close SignUpActivity
+                        })
+                        .exceptionally(ex -> {
+                            MyToast.showError(this, "An error occurred: " + ex.getMessage());
+                            return null;
+                        });
             }
-
         });
-
     }
 
 }

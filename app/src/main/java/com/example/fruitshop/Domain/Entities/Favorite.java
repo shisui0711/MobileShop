@@ -9,6 +9,22 @@ foreignKeys = {
         @ForeignKey(entity = Product.class,parentColumns = "id",childColumns = "productId")
 })
 public class Favorite {
-    public int userId;
-    public  int productId;
+    private long userId;
+    private   int productId;
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 }

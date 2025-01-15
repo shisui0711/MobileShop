@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Presenter.Fragment.StatisticsFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_grey_background"
+            android:padding="8dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDay"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_primary"
+                android:text="Hôm nay"
+                style="@android:style/Widget.Button"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnWeek"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_secondary"
+                android:text="Tuần này"
+                android:layout_marginHorizontal="8dp"
+                style="@android:style/Widget.Button"
+                android:textStyle="bold"
+                android:textColor="@color/secondary_500"
+                />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnMonth"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_secondary"
+                android:text="Tháng này"
+                android:layout_marginHorizontal="8dp"
+                style="@android:style/Widget.Button"
+                android:textStyle="bold"
+                android:textColor="@color/secondary_500"
+                />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnYear"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_secondary"
+                android:text="Năm nay"
+                android:layout_marginHorizontal="8dp"
+                style="@android:style/Widget.Button"
+                android:textStyle="bold"
+                android:textColor="@color/secondary_500"
+                />
+        </LinearLayout>
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="16dp" />
+    </LinearLayout>
+</FrameLayout>

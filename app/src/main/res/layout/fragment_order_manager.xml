@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Presenter.Fragment.OrderManagerFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tất cả đơn hàng"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/primary_500"
+            android:textSize="26sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_margin="12dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:background="@drawable/edittext_grey_background"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="12dp"
+                android:hint="Tìm kiếm theo tên người dùng"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_marginHorizontal="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</FrameLayout>

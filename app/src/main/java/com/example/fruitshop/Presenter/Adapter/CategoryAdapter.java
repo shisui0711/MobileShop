@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fruitshop.Domain.Entities.Category;
 import com.example.fruitshop.databinding.CategoryViewholderBinding;
 
@@ -34,11 +35,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
         Category category = categories.get(position);
-        binding.categoryName.setText(category.getName());
+        holder.binding.categoryName.setText(category.getName());
 
-        int drawableResource = holder.itemView.getResources().getIdentifier(category.getImageUrl(),
-                "drawable",holder.itemView.getContext().getPackageName());
-        Glide.with(context).load(drawableResource).into(binding.categoryImage);
+        if(category.getImageUrl().contains("/")){
+            Glide.with(context).load(category.getImageUrl())
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(holder.binding.categoryImage);
+        }else{
+            int drawableResource = holder.itemView.getResources().getIdentifier(category.getImageUrl().trim(),
+                    "drawable",holder.itemView.getContext().getPackageName());
+            Glide.with(context).load(drawableResource)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(holder.binding.categoryImage);
+        }
     }
 
     @Override

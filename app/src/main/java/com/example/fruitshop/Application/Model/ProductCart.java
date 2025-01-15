@@ -5,14 +5,24 @@ public class ProductCart {
     private String name;
     private int price;
     private String imageUrl;
+    private String unit;
     private int quantity;
 
-    public ProductCart(int id, String name, int price, String imageUrl, int quantity) {
+    public ProductCart(int id, String name, int price, String imageUrl, int quantity, String unit) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+        this.unit = unit;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public int getId() {

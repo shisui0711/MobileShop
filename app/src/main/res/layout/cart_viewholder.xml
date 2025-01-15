@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f5f5f5"
+    android:background="@drawable/bg_secondary_selected"
     android:layout_marginBottom="12dp"
+    android:padding="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:id="@+id/imgContainer"
@@ -46,21 +47,32 @@
         app:layout_constraintTop_toBottomOf="@id/txtProductName"
         />
     <TextView
+        android:id="@+id/slash"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:textColor="@color/primary_500"
-        android:text="/kg"
+        android:textStyle="bold"
+        android:text="/"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/txtProductPrice"
         app:layout_constraintTop_toTopOf="@id/txtProductPrice"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/txtUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kg"
+        android:textSize="16sp"
+        android:textColor="@color/primary_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/slash"
+        app:layout_constraintTop_toTopOf="@id/slash"
         />
     <TextView
         android:id="@+id/txtTotalPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10000đ"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@id/imgContainer"
@@ -68,7 +80,7 @@
         />
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="@id/imgContainer"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/edittext_white_bg"
@@ -79,7 +91,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
-            android:layout_marginEnd="10dp"
             android:background="@drawable/btn_primary"
             android:paddingVertical="10dp"
             android:paddingHorizontal="15dp"
@@ -88,21 +99,13 @@
             />
         <TextView
             android:id="@+id/txtQuantity"
+            android:layout_marginHorizontal="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:text="1"
             android:textAlignment="center"
-            />
-        <TextView
-            android:id="@+id/txtUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="kg"
-            android:layout_marginEnd="10dp"
             />
         <TextView
             android:id="@+id/btnIncrease"
@@ -116,4 +119,13 @@
             android:textColor="@color/white"
             />
     </LinearLayout>
+    <ImageView
+        android:id="@+id/btnDelete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/close"
+        app:tint="@color/danger_600"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

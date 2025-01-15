@@ -2,6 +2,7 @@ package com.example.fruitshop.Presenter.Activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.fruitshop.Application.ViewModel.ProductViewModel;
 import com.example.fruitshop.Domain.Entities.Product;
 import com.example.fruitshop.Infrastructure.Data.SearchHistoryHelper;
+import com.example.fruitshop.Infrastructure.Tool.Extension;
 import com.example.fruitshop.Presenter.Adapter.SearchHistoryAdapter;
 import com.example.fruitshop.Presenter.Adapter.SearchResultAdapter;
 import com.example.fruitshop.R;
@@ -28,6 +30,9 @@ public class SearchActivity extends AppCompatActivity {
     ActivitySearchBinding binding;
     SearchHistoryHelper searchHistoryHelper;
     ProductViewModel productViewModel;
+    Handler searchHandler = new Handler();
+    Runnable searchRunnable;
+    private static final long DEBOUNCE_DELAY = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class SearchActivity extends AppCompatActivity {
             binding.searchHistoryRecycler.setAdapter(new SearchHistoryAdapter(histories));
         }
 
+        binding.searchResultRecycler.setLayoutManager(new LinearLayoutManager(SearchActivity.this,LinearLayoutManager.VERTICAL,false));
+
         binding.edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,17 +67,22 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                productViewModel.getByName(s.toString()).observe(SearchActivity.this, data -> {
-                    binding.searchResultRecycler.setLayoutManager(new LinearLayoutManager(SearchActivity.this,LinearLayoutManager.VERTICAL,false));
-                    binding.searchResultRecycler.setAdapter(new SearchResultAdapter((ArrayList<Product>) data));
-                });
+                searchHandler.removeCallbacks(searchRunnable);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                searchRunnable = () -> performSearch();
+                searchHandler.postDelayed(searchRunnable,300);
             }
         });
 
+    }
+
+    private void performSearch() {
+        String name = binding.edtSearch.getText().toString();
+        Extension.observeOnce(productViewModel.getByName(name),this,data -> {
+            binding.searchResultRecycler.setAdapter(new SearchResultAdapter((ArrayList<Product>) data));
+        });
     }
 }

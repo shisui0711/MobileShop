@@ -8,19 +8,28 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "users")
 public class User {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     private String name;
     private String email;
     private String passwordHash;
     @Nullable
     private String imageUrl;
 
+    public User() {
+    }
 
-    public int getId() {
+    public User(String name, String email, String passwordHash, @Nullable String imageUrl) {
+        this.name = name;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.imageUrl = imageUrl;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

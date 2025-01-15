@@ -14,14 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fruitshop.Application.Model.ProductCart;
+import com.example.fruitshop.Application.ViewModel.UserViewModel;
 import com.example.fruitshop.Domain.Entities.User;
 import com.example.fruitshop.Infrastructure.Data.AppDatabase;
 import com.example.fruitshop.Infrastructure.Data.TinyDB;
 import com.example.fruitshop.Infrastructure.Data.UserHelper;
+import com.example.fruitshop.Infrastructure.Tool.Extension;
+import com.example.fruitshop.Presenter.Custom.MyModal;
 import com.example.fruitshop.Presenter.Custom.MyToast;
+import com.example.fruitshop.Presenter.Fragment.FavoriteFragment;
 import com.example.fruitshop.Presenter.Fragment.HomeFragment;
+import com.example.fruitshop.Presenter.Fragment.OrderFragment;
 import com.example.fruitshop.Presenter.Fragment.ProfileFragment;
 import com.example.fruitshop.R;
 import com.example.fruitshop.databinding.ActivityMainBinding;
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     UserHelper userHelper;
+    UserViewModel userViewModel;
     Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         userHelper = new UserHelper(this);
         gson = new Gson();
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         setContentView(binding.getRoot());
+        checkSignedUser();
         AppDatabase.getDatabase(this);
 
         getWindow().setStatusBarColor(Color.parseColor("#f5f5f5"));
@@ -61,11 +70,23 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        binding.btnFavorite.setOnClickListener(v->{
+            User user = userHelper.getUserSigned();
+            if(user == null){
+                MyModal.showLoginDialog(this,()-> startActivity(new Intent(v.getContext(), SignInActivity.class)));
+                return;
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(binding.frameContainer.getId(), new FavoriteFragment())
+                    .commit();
+            switchTabColor(2);
+        });
+
 
         binding.btnProfile.setOnClickListener(v->{
             User user = userHelper.getUserSigned();
             if(user == null){
-                showLoginDialog();
+                MyModal.showLoginDialog(this,()-> startActivity(new Intent(v.getContext(), SignInActivity.class)));
                 return;
             }
             getSupportFragmentManager().beginTransaction()
@@ -74,9 +95,31 @@ public class MainActivity extends AppCompatActivity {
             switchTabColor(4);
         });
 
+        binding.btnHistory.setOnClickListener(v->{
+            User user = userHelper.getUserSigned();
+            if(user == null){
+                MyModal.showLoginDialog(this,()-> startActivity(new Intent(v.getContext(), SignInActivity.class)));
+                return;
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(binding.frameContainer.getId(), new OrderFragment())
+                    .commit();
+            switchTabColor(3);
+        });
+
         binding.btnCart.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(),CartActivity.class);
             startActivity(intent);
+        });
+    }
+
+    private void checkSignedUser(){
+        User userSigned = userHelper.getUserSigned();
+        if(userSigned == null) return;
+        Extension.observeOnce(userViewModel.getUserByEmail(userSigned.getEmail()),this,existUser -> {
+            if(existUser == null){
+                userHelper.removeUser();
+            }
         });
     }
 
@@ -118,20 +161,6 @@ public class MainActivity extends AppCompatActivity {
             binding.imgProfile.setImageTintList(ColorStateList.valueOf(Color.parseColor("#0286FF")));
             binding.txtProfile.setTextColor(Color.parseColor("#0286FF"));
         }
-    }
-
-    private void showLoginDialog(){
-        LoginDialogBinding loginDialogBinding = LoginDialogBinding.inflate(LayoutInflater.from(this));
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(loginDialogBinding.getRoot());
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.edittext_white_bg);
-
-        loginDialogBinding.btnClose.setOnClickListener(v->dialog.dismiss());
-        loginDialogBinding.btnBack.setOnClickListener(v->dialog.dismiss());
-        loginDialogBinding.btnLogin.setOnClickListener(v->{
-            startActivity(new Intent(v.getContext(), SignInActivity.class));
-        });
-        dialog.show();
     }
 
 }

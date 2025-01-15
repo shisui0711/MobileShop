@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.fruitshop.Domain.Entities.User;
 import com.example.fruitshop.Infrastructure.Data.UserHelper;
+import com.example.fruitshop.Presenter.Activity.AdminActivity;
 import com.example.fruitshop.Presenter.Activity.SignInActivity;
 import com.example.fruitshop.R;
 import com.example.fruitshop.databinding.FragmentProfileBinding;
@@ -38,6 +39,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.btnAdmin.setOnClickListener(v->{
+            startActivity(new Intent(requireContext(), AdminActivity.class));
+        });
+
         binding.btnLogOut.setOnClickListener(v->{
             User user = userHelper.getUserSigned();
             userHelper.removeUser();

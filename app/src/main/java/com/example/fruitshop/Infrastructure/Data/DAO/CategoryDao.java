@@ -28,7 +28,10 @@ public interface CategoryDao {
     int count();
     @Query("SELECT * FROM categories WHERE id = :id")
 
-    Category getById(int id);
+
+    LiveData<Category> getById(int id);
+    @Query("SELECT * FROM categories WHERE name LIKE '%' || :name || '%'")
+    LiveData<List<Category>> getByName(String name);
     @Query("SELECT * FROM categories")
     LiveData<List<Category>> getAll();
 

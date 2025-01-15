@@ -1,36 +1,62 @@
 package com.example.fruitshop.Presenter.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.fruitshop.Application.Model.ProductCart;
+import com.example.fruitshop.Application.ViewModel.OrderViewModel;
+import com.example.fruitshop.Domain.Entities.DetailOrder;
+import com.example.fruitshop.Domain.Entities.Order;
+import com.example.fruitshop.Domain.Entities.User;
 import com.example.fruitshop.Infrastructure.Data.CartHelper;
+import com.example.fruitshop.Infrastructure.Data.UserHelper;
 import com.example.fruitshop.Presenter.Adapter.CartAdapter;
+import com.example.fruitshop.Presenter.Custom.MyModal;
+import com.example.fruitshop.Presenter.Custom.MyToast;
+import com.example.fruitshop.Presenter.Event.OnQuantityChangeListener;
 import com.example.fruitshop.R;
 import com.example.fruitshop.databinding.ActivityCartBinding;
 
-public class CartActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+public class CartActivity extends AppCompatActivity implements OnQuantityChangeListener {
     ActivityCartBinding binding;
     CartHelper cartHelper;
+    UserHelper userHelper;
     boolean codMethod = true;
+    OrderViewModel orderViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityCartBinding.inflate(getLayoutInflater());
         cartHelper = new CartHelper(this);
+        userHelper = new UserHelper(this);
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         setContentView(binding.getRoot());
 
         binding.btnBack.setOnClickListener(v-> finish());
 
+        ArrayList<ProductCart> productCarts = cartHelper.getProductsInCart();
+        if(productCarts.isEmpty()){
+            binding.container.setVisibility(View.INVISIBLE);
+            binding.btnPurchase.setVisibility(View.INVISIBLE);
+            binding.txtEmpty.setVisibility(View.VISIBLE);
+            return;
+        }
+
         binding.cartRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        binding.cartRecyclerView.setAdapter(new CartAdapter(cartHelper.getProductsInCart()));
+        binding.cartRecyclerView.setAdapter(new CartAdapter(this,productCarts));
+        loadTotalPrice();
 
         binding.btnCOD.setOnClickListener(v->{
             if(codMethod) return;
@@ -45,5 +71,43 @@ public class CartActivity extends AppCompatActivity {
             binding.btnTransfer.setBackground(getResources().getDrawable(R.drawable.bg_primary_selected,null));
             binding.btnCOD.setBackground(getResources().getDrawable(R.drawable.bg_secondary_selected,null));
         });
+
+        binding.btnPurchase.setOnClickListener(v->{
+            User currentUser = userHelper.getUserSigned();
+            if(currentUser == null){
+                MyModal.showLoginDialog(this,()-> startActivity(new Intent(v.getContext(), SignInActivity.class)));
+                return;
+            }
+            Double totalPrice = Double.parseDouble(binding.txtTotalPrice.getText().toString().replace("đ",""));
+            Order order = new Order(currentUser.getId(),new Date(),"Chưa thanh toán",codMethod ? "COD": "TRANSFER",totalPrice);
+            List<DetailOrder> detailOrders = new ArrayList<>();
+            productCarts.forEach(productCart -> {
+                DetailOrder detailOrder = new DetailOrder(productCart.getId(),productCart.getQuantity(),productCart.getPrice());
+                detailOrders.add(detailOrder);
+            });
+
+            orderViewModel.createOrder(order,detailOrders).thenAccept(x->{
+                cartHelper.clear();
+                runOnUiThread(()->{
+                    MyModal.showSuccess(CartActivity.this,"Đặt hàng thành công",()-> finish());
+                });
+            }).exceptionally(ex -> {
+                System.out.println("Ngoại lệ: " + ex.getMessage());
+                return null;
+            });
+        });
+    }
+    private void loadTotalPrice(){
+        ArrayList<ProductCart> productCarts = cartHelper.getProductsInCart();
+        double totalPrice = 0;
+        for (ProductCart product : productCarts) {
+            totalPrice += product.getPrice() * product.getQuantity();
+        }
+        binding.txtTotalPrice.setText(totalPrice + "đ");
+    }
+
+    @Override
+    public void onQuantityChanged(ProductCart productCart) {
+        loadTotalPrice();
     }
 }

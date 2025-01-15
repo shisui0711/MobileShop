@@ -35,8 +35,8 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     @Override
     public void onBindViewHolder(@NonNull SearchHistoryAdapter.ViewHolder holder, int position) {
         String history = histories.get(position);
-        binding.txtHistory.setText(history);
-        binding.btnRemove.setOnClickListener(v->{
+        holder.binding.txtHistory.setText(history);
+        holder.binding.btnRemove.setOnClickListener(v->{
             searchHistoryHelper.remove(history);
             histories.remove(history);
         });
@@ -48,8 +48,10 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        SearchHistoryViewholderBinding binding;
         public ViewHolder(@NonNull SearchHistoryViewholderBinding binding) {
             super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

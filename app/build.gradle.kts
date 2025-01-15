@@ -45,6 +45,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("androidx.paging:paging-runtime:3.3.5")
     implementation("androidx.room:room-paging:2.6.1")
     implementation(libs.navigation.fragment)

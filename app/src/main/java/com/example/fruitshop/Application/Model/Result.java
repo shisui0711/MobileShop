@@ -4,8 +4,6 @@ import java.util.Collection;
 
 public class Result<T> {
     private boolean isLoading;
-    private boolean isSuccess;
-    private boolean isError;
 
     public boolean isLoading() {
         return isLoading;
@@ -13,22 +11,6 @@ public class Result<T> {
 
     public void setLoading(boolean loading) {
         isLoading = loading;
-    }
-
-    public boolean isSuccess() {
-        return isSuccess;
-    }
-
-    public void setSuccess(boolean success) {
-        isSuccess = success;
-    }
-
-    public boolean isError() {
-        return isError;
-    }
-
-    public void setError(boolean error) {
-        isError = error;
     }
 
     private T data;

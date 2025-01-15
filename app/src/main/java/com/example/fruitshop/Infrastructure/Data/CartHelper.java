@@ -41,17 +41,20 @@ public class CartHelper {
         tinyDB.putString("cart",gson.toJson(productCarts));
 
     }
+
+
     public void updateQuantity(ProductCart productCart, int quantity){
         ArrayList<ProductCart> productCarts = getProductsInCart();
-        int index = productCarts.indexOf(productCart);
-        if(index != -1){
-            productCarts.get(index).setQuantity(quantity);
-        }
+        productCarts.forEach(x->{
+            if(x.getId() == productCart.getId()){
+                x.setQuantity(quantity);
+            }
+        });
         tinyDB.putString("cart",gson.toJson(productCarts));
     }
     public void removeProduct(ProductCart item){
         ArrayList<ProductCart> productCarts = getProductsInCart();
-        productCarts.remove(item);
+        productCarts.removeIf(x->x.getId() == item.getId());
         tinyDB.putString("cart",gson.toJson(productCarts));
     }
     public ArrayList<ProductCart> getProductsInCart(){
@@ -59,5 +62,9 @@ public class CartHelper {
         if(json.equals("")) return new ArrayList<>();
         Type type = new TypeToken<ArrayList<ProductCart>>() {}.getType();
         return gson.fromJson(json,type);
+    }
+
+    public void clear(){
+        tinyDB.remove("cart");
     }
 }

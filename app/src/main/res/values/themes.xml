@@ -5,5 +5,9 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <style name="ActionBar" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="Theme.FruitShop" parent="Base.Theme.FruitShop" />
 </resources>
